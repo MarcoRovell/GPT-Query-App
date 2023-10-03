@@ -19,49 +19,23 @@ const App = () => {
         method: 'POST' 
       });
 
-      if (response.ok) {
-        console.log('Python script executed successfully!');
-      } else {
+      if (!response.ok) {
         console.error('Failed to execute Python script.');
+        throw new Error('Failed to fetch stdout data.');
       }
+
+      const data = await response.json();
+
+      const answer = data.stdout;
+
+      
+
     } catch (error) {
       console.error('Error:', error);
     }
     // let data = "\r"
   }
 
-  // const modelPath = '../model.py';
-  // exec('python ${modelPath}', (error, stdout, stderr) => {
-  //   if (error) {
-  //     console.error('Error executing model script: ${error.message}');
-  //     return;
-  //   }
-  //   console.log('model script output:', stdout);
-  // });
-
-
-  // const handleButtonClick = async (input) => {
-  //   try {
-  //     const response = await fetch('/run-python-script', {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json'
-  //       },
-  //       body: JSON.stringify({
-  //         input
-  //       })
-  //     });
-
-  //     if (response.ok) {
-  //       const result = await response.text();
-  //       console.log('Python script execution result:', result);
-  //     } else {
-  //       console.error('Failed to execute Python script:', response.statusText);
-  //     }
-  //   } catch (error) {
-  //     console.error('Error:', error);
-  //   }
-  // };
 
   return (
     <div>
