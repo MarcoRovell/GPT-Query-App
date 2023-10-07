@@ -6,13 +6,35 @@ const App = () => {
   const [input3, setInput3] = useState('');
 
   const saveFile = async () => {
-    console.log('worked!');
-    // const gender = document.getElementById("selGender");
-    // const age = document.getElementById("numAge");
-    // const Symptom1 = input1;
-    // const Symptom2 = input2;
-    // const Symptom3 = input3;
-    // const text = document.getElementById("msg");
+    const gender = document.getElementById("selGender").value;
+    const age = document.getElementById("numAge").value;
+    const Symptom1 = input1;
+    const Symptom2 = input2;
+    const Symptom3 = input3;
+    const text = document.getElementById("msg").value;
+
+    const inputData = "Input form data of user\n\nAge: " + age + "\nGender: " + gender + 
+    "\nSymptom 1: " + Symptom1 + "\nSymptom 2: " + Symptom2 + 
+    "\nSymptom 3: " + Symptom3 + "\n\nBrief description: " + text
+
+
+    try {
+      const response = await fetch('http://localhost:3001/update-txt', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'text/plain'
+        },
+        body: inputData
+      });
+
+      if (response.ok) {
+        console.log('Data added to file successfully. ');
+      } else {
+        console.error('Error adding data to file: ', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error: ', error);
+    }
 
     try {
       const response = await fetch('http://localhost:3001/run-python-script', { // need to be able to run on any port that server opens on
@@ -25,15 +47,13 @@ const App = () => {
       }
 
       const data = await response.json();
-
       const answer = data.stdout;
-      console.log(answer);
+      console.log(answer); // display to users
 
 
     } catch (error) {
       console.error('Error:', error);
     }
-    // let data = "\r"
   }
 
 
@@ -62,7 +82,7 @@ const App = () => {
           name="msg" 
           maxLength={250} 
           style={{ height: '200px', width: '500px'}} 
-          placeholder="Give us some more detail about your symtoms... 250 characters max!">
+          placeholder="Give us some more detail about your symptoms...&#10;Be as descriptive as possible for maximum results...&#10;250 characters max!">
         </textarea>
       </div>
       <body>

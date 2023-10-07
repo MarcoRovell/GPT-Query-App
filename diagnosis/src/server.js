@@ -1,8 +1,9 @@
 import express from 'express';
 import { exec } from 'child_process';
+import bodyParser from 'body-parser';
+import { appendFile, writeFileSync } from 'fs'; 
 
 const app = express();
-// const port = process.env.PORT;
 const port = 3001;
 
 app.use((req, res, next) => {
@@ -13,6 +14,18 @@ app.use((req, res, next) => {
   next();
 });
 
+
+app.use(bodyParser.text());
+app.post('/update-txt', (req, res) => {
+    const data = req.body;
+    appendFile('data.txt', data, (err) => {
+      if(err) {
+        return res.status(500).send('Error writing to file.');
+      }
+      res.status(200).send('Data added to file successfully.');
+    })
+});
+
 app.post('/run-python-script', (req, res) => {
   const question = 'give a numbered list of possible illnesses or health-issues I may be experiencing according to the information provided';
   exec('python model.py ' + question, (error, stdout, stderr) => {
@@ -21,8 +34,15 @@ app.post('/run-python-script', (req, res) => {
       res.status(500).send('Internal server error.');
       return;
     }
-    // console.log(`${stdout}`); 
     res.send({stdout: stdout});
+    try {
+      writeFileSync('data.txt', '', {
+        flag: "w"
+      });
+    } catch (err){
+      console.error('Error rewriting file: ', err);
+    }
+
   });
 });
 
