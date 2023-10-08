@@ -48,7 +48,11 @@ const App = () => {
 
       const data = await response.json();
       const answer = data.stdout;
-      console.log(answer); // display to users
+
+      const responseContainer = document.getElementById('response-container');
+      responseContainer.innerText = answer;
+      
+      console.log(answer); 
 
 
     } catch (error) {
@@ -80,15 +84,22 @@ const App = () => {
       <div>
         <textarea id="msg" 
           name="msg" 
-          maxLength={250} 
-          style={{ height: '200px', width: '500px'}} 
-          placeholder="Give us some more detail about your symptoms...&#10;Be as descriptive as possible for maximum results...&#10;250 characters max!">
+          maxLength={500} 
+          rows = '20'
+          cols = '50'
+          style={{ resize: 'none' }} 
+          placeholder="Give us some more detail about your symptoms...&#10;Be as descriptive as possible for maximum results...&#10;500 characters max!">
         </textarea>
       </div>
       <body>
         <input type="button" id="bt" value="Input Save Data" onClick={saveFile} />
       </body>
+
+      <div id="response-container"></div>
+
     </div>
+
+
 
   );
 };
